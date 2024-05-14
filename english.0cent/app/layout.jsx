@@ -14,14 +14,14 @@ const RootLayout = ({ children }) => {
     <html lang="en">
         <body>
             <div className='flex w-screen h-screen'>
-                <div className='w-1/5 h-full justify-start px-4 py-4'>
+                <div className='w-1/5 h-full px-5 py-5'>
                     <div className='head_text text-center '>
                         <Link href="/" className='orange_gradient'>English 0 cent</Link>
                     </div>
-                   <div className='mx-4 my-4'>
+                   <div className='px-5 py-5'>
                         <Nav /> 
                     </div>
-                   <div className='fixed bottom-3 px-4 py-2'>
+                   <div className='fixed bottom-10'>
                         <Account />
                     </div>
                 </div>

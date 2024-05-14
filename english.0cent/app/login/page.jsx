@@ -21,7 +21,7 @@ const page = () => {
           </div>
           <div>
             <div className='w-full h-16 flex-center'>Done with the Fill-out? then it's time to Login </div>
-            <button className='w-full h-16 bg-black rounded-3xl flex-center text-white'>Log in with Google</button>
+            <button className='transform transition duration-500 hover:scale-105 w-full h-16 bg-black rounded-3xl flex-center text-white'>Log in with Google</button>
           </div>
         </div>
       </div>

@@ -3,96 +3,96 @@ import Image from 'next/image';
 
 const Nav = () => {
   return (
-    <section className="flex-col mb-10 px-6 py-6">
-      <div className='flex items-center cursor-pointer'>
-        <Image
-          src="/assets/images/logo.jpg"
-          width={50}
-          height={50}
-          alt="Picture of the author"
-        />
-        <div className='ml-6'>
-          <Link href="/dashboard" className="text-base font-bold">Dash Board</Link>
+    <section className="flex-col py-10">
+      <div className='w-52 h-auto py-3 space-x-5 flex-start rounded-2xl cursor-pointer transform transition duration-500 hover:scale-105 hover:bg-yellow-300'>
+        <div className='w-1/4 flex-center px-3'>
+          <Image
+            src="/assets/icons/DashBoard.png"
+            width={30}
+            height={30}
+            alt="Icon of Dashboard"
+          />
         </div>
+          <Link href="/dashboard" className="w-3/4 text-base font-bold flex-start">Dash Board</Link>
       </div>
-      <div className='flex items-center cursor-pointer'>
-        <Image
-          src="/assets/images/logo.jpg"
-          width={50}
-          height={50}
-          alt="Picture of the author"
-        />
-        <div className='ml-6'>
-          <Link href="/analytics" className="text-base font-bold">Analytics</Link>
+      <div className='w-52 h-auto py-3 space-x-5 flex-start rounded-2xl cursor-pointer transform transition duration-500 hover:scale-105 hover:bg-yellow-300'>
+        <div className='w-1/4 flex-center px-3'>
+          <Image
+            src="/assets/icons/DashBoard.png"
+            width={30}
+            height={30}
+            alt="Icon of Dashboard"
+          />
         </div>
+          <Link href="/dashboard" className="w-3/4 text-base font-bold flex-start">Analytics</Link>
       </div>
-      <div className='flex items-center cursor-pointer'>
-        <Image
-          src="/assets/images/logo.jpg"
-          width={50}
-          height={50}
-          alt="Picture of the author"
-        />
-        <div className='ml-6'>
-          <Link href="/notifications" className="text-base font-bold">Notifications</Link>
+      <div className='w-52 h-auto py-3 space-x-5 flex-start rounded-2xl cursor-pointer transform transition duration-500 hover:scale-105 hover:bg-yellow-300'>
+        <div className='w-1/4 flex-center px-3'>
+          <Image
+            src="/assets/icons/DashBoard.png"
+            width={30}
+            height={30}
+            alt="Icon of Dashboard"
+          />
         </div>
+          <Link href="/dashboard" className="w-3/4 text-base font-bold flex-start">Notifications</Link>
       </div>
-      <div className='flex-col mt-10'>
-      <div className='flex items-center cursor-pointer'>
-        <Image
-          src="/assets/images/logo.jpg"
-          width={50}
-          height={50}
-          alt="Picture of the author"
-        />
-        <div className='ml-6'>
-          <Link href="/courses" className="text-base font-bold">Courses</Link>
+      <div className='flex-col py-10'>
+      <div className='w-52 h-auto py-3 space-x-5 flex-start rounded-2xl cursor-pointer transform transition duration-500 hover:scale-105 hover:bg-yellow-300'>
+        <div className='w-1/4 flex-center px-3'>
+          <Image
+            src="/assets/icons/DashBoard.png"
+            width={30}
+            height={30}
+            alt="Icon of Dashboard"
+          />
         </div>
+          <Link href="/dashboard" className="w-3/4 text-base font-bold flex-start">Courses</Link>
       </div>
-      <div className='flex items-center cursor-pointer'>
-        <Image
-          src="/assets/images/logo.jpg"
-          width={50}
-          height={50}
-          alt="Picture of the author"
-        />
-        <div className='ml-6'>
-          <Link href="/library" className="text-base font-bold">Library</Link>
+      <div className='w-52 h-auto py-3 space-x-5 flex-start rounded-2xl cursor-pointer transform transition duration-500 hover:scale-105 hover:bg-yellow-300'>
+        <div className='w-1/4 flex-center px-3'>
+          <Image
+            src="/assets/icons/DashBoard.png"
+            width={30}
+            height={30}
+            alt="Icon of Dashboard"
+          />
         </div>
+          <Link href="/dashboard" className="w-3/4 text-base font-bold flex-start">Library</Link>
       </div>
-      <div className='flex items-center cursor-pointer'>
-        <Image
-          src="/assets/images/logo.jpg"
-          width={50}
-          height={50}
-          alt="Picture of the author"
-        />
-        <div className='ml-6'>
-          <Link href="/blog" className="text-base font-bold">Blog</Link>
+      <div className='w-52 h-auto py-3 space-x-5 flex-start rounded-2xl cursor-pointer transform transition duration-500 hover:scale-105 hover:bg-yellow-300'>
+        <div className='w-1/4 flex-center px-3'>
+          <Image
+            src="/assets/icons/DashBoard.png"
+            width={30}
+            height={30}
+            alt="Icon of Dashboard"
+          />
         </div>
+          <Link href="/dashboard" className="w-3/4 text-base font-bold flex-start">Blogs</Link>
       </div>
-      <div className='flex-col mt-10'>
-      <div className='flex items-center cursor-pointer'>
-        <Image
-          src="/assets/images/logo.jpg"
-          width={50}
-          height={50}
-          alt="Picture of the author"
-        />
-        <div className='ml-6'>
-          <Link href="/donate" className="text-base font-bold">Donate</Link>
+      <div className='flex-col py-10'>
+      <div className='w-52 h-auto py-3 space-x-5 flex-start rounded-2xl cursor-pointer transform transition duration-500 hover:scale-105 hover:bg-yellow-300'>
+        <div className='w-1/4 flex-center px-3'>
+          <Image
+            src="/assets/icons/DashBoard.png"
+            width={30}
+            height={30}
+            alt="Icon of Dashboard"
+          />
         </div>
+          <Link href="/dashboard" className="w-3/4 text-base font-bold flex-start">Donate</Link>
       </div>
-      <div className='flex items-center cursor-pointer'>
-        <Image
-          src="/assets/images/logo.jpg"
-          width={50}
-          height={50}
-          alt="Picture of the author"
-        />
-        <div className='ml-6'>
-          <Link href="/about_me/resume" className="text-base font-bold">About Me</Link>
+      <div className='w-52 h-auto py-3 space-x-5 flex-start rounded-2xl cursor-pointer transform transition duration-500 hover:scale-105 hover:bg-yellow-300'>
+        <div className='w-1/4 flex-center px-3'>
+          <Image
+            src="/assets/icons/DashBoard.png"
+            width={30}
+            height={30}
+            alt="Icon of Dashboard"
+          />
         </div>
+          <Link href="/dashboard" className="w-3/4 text-base font-bold flex-start">About me</Link>
       </div>
       </div>
       </div>  

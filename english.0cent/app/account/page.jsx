@@ -32,7 +32,8 @@ const Account_Page = () => {
                     <div className='w-2/3 bg-gray-100 rounded-r-3xl px-3 py-3 text-center'>unclechuong0603@gmail.com</div>
                 </div>
                 <div className='w-full flex-center'>
-                    <div className='w-1/3 h-auto bg-gray-100 rounded-3xl text-2xl font-bold px-10 py-5 flex-center'>Log out</div>
+                    <div className='w-1/3 h-auto bg-black rounded-3xl text-white text-2xl font-bold px-10 py-3 flex-center cursor-pointer transform transition duration-500 hover:scale-105
+'>Log out</div>
                 </div>
             </div>
         </section>
