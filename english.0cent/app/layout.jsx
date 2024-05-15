@@ -13,9 +13,9 @@ const RootLayout = ({ children }) => {
   return (
     <html lang="en">
         <body>
-            <div className='flex w-screen h-screen'>
+            <div className='flex-center w-screen h-screen'>
                 <div className='w-1/5 h-full px-5 py-5'>
-                    <div className='head_text text-center '>
+                    <div className='head_text text-center transform transition duration-500 hover:scale-105'>
                         <Link href="/" className='orange_gradient'>English 0 cent</Link>
                     </div>
                    <div className='px-5 py-5'>

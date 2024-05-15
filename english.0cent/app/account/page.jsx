@@ -15,10 +15,6 @@ const Account_Page = () => {
                     <div className='w-2/3 bg-gray-100 px-3 py-3 text-center'>March 6, 2000</div>
                 </div>
                 <div className='flex'>
-                    <div className='w-1/3 bg-gray-200 px-3 py-3 text-center'>Email</div>
-                    <div className='w-2/3 bg-gray-100 px-3 py-3 text-center'>unclechuong0603@gmail.com</div>
-                </div>
-                <div className='flex'>
                     <div className='w-1/3 bg-gray-200 rounded-es-3xl px-3 py-3 text-center'>Job Title</div>
                     <div className='w-2/3 bg-gray-100 rounded-ee-3xl px-3 py-3 text-center'>English Translator</div>
                 </div>

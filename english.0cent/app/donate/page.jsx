@@ -1,8 +1,7 @@
-import EmailSubscribe from '@components/general/email_subscribe.jsx';
 
 const page = () => {
   return (
-    <section className='w-full h-full flex-col px-10 py-10 space-y-10'>
+    <section className='w-full h-screen flex-col px-10 py-10 space-y-10'>
         <section className='w-full h-full rounded-3xl px-10 py-10 space-x-10 flex-center bg-white'>
             <div className='w-2/3 space-y-10'>
                 <div className='head_text'>Thank you for your support</div>
@@ -26,8 +25,6 @@ const page = () => {
                 </div>
             </div>
         </section>
-
-        <EmailSubscribe />
     </section>
   )
 }

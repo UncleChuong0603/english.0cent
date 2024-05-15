@@ -7,7 +7,7 @@ const Account = () => {
   const isUserLoggedIn = false;
   
   return (
-    <div>
+    <div className='cursor-pointer transform transition duration-500 hover:scale-105'>
       {isUserLoggedIn ? (
         <div className="flex items-center w-60 bg-gray-100 rounded-3xl px-6 py-2">
           <Image
