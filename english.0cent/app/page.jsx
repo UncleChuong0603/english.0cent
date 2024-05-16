@@ -3,11 +3,6 @@ import EmailSubscribe from '../components/general/email_subscribe';
 const Home = () => {
   return (
     <section className='flex-col px-10 py-10 space-y-10'>
-      
-      <section className='w-full h-24 bg-black rounded-full flex-center px-10'>
-        <div className='w-3/4  text-white font-bold text-2xl'>Recipes tell you nothing. Learning techniques is the key.</div>
-        <div className='w-1/4 text-white font-bold text-2xl text-end'>Tom Colicchio</div>
-      </section>
 
       <section className='flex-col  bg-white rounded-3xl'>
         <div className='head_text mx-10 pt-10'>Don't miss the below</div>

@@ -7,9 +7,9 @@ const Account = () => {
   const isUserLoggedIn = false;
   
   return (
-    <div className='cursor-pointer transform transition duration-500 hover:scale-105'>
+    <div className='w-60 cursor-pointer transform transition duration-500 hover:scale-105'>
       {isUserLoggedIn ? (
-        <div className="flex items-center w-60 bg-gray-100 rounded-3xl px-6 py-2">
+        <div className="flex items-center w-full bg-gray-100 rounded-3xl px-6 py-2">
           <Image
             src="/assets/images/logo.jpg"
             width={50}
@@ -23,7 +23,7 @@ const Account = () => {
           </div>
         </div>
       ) : (
-        <div className="flex items-center w-60 bg-gray-100 rounded-3xl px-6 py-2">
+        <div className="flex-center w-full bg-gray-100 rounded-3xl px-6 py-2">
           <Image
             src="/assets/images/logo.jpg"
             width={50}

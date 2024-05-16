@@ -1,5 +1,5 @@
 {
-  "name": "unclechuong.io.vn",
+  "name": "english.0cent",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -16,5 +16,9 @@
   "devDependencies": {
     "postcss": "^8",
     "tailwindcss": "^3.4.1"
-  }
+  },
+  "description": "This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).",
+  "main": "tailwind.config.js",
+  "author": "",
+  "license": "ISC"
 }
