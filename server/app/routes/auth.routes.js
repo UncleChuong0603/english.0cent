@@ -1,12 +1,10 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const { authJwt } = require("../middlewares");
-const authController = require("../controllers/auth.controller");
+const { signup, login, logout, refreshToken } = require('../controllers/auth.controller');
 
-// Routes for authentication
-router.post("/signup", authController.signup);
-router.post("/login", authController.login);
-router.post("/logout", authJwt.verifyToken, authController.logout);
-router.post("/refresh-token", authController.refreshToken);
+router.route('/signup').post(signup);
+router.route('/login').post(login);
+router.route('/logout').get(logout);
+router.route('/refresh').get(refreshToken);
 
 module.exports = router;

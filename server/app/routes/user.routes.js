@@ -1,11 +1,14 @@
 const express = require("express");
 const router = express.Router();
-const { authJwt } = require("../middlewares");
-const userController = require("../controllers/user.controller");
+const UserController = require("../controllers/user.controller.js");
 
-// Routes for user management
-router.get("/profile", authJwt.verifyToken, userController.getUserProfile);
-router.put("/profile", authJwt.verifyToken, userController.updateUserProfile);
-router.delete("/profile", authJwt.verifyToken, userController.deleteUserProfile);
+// Get single user by id
+router.get("/:id", UserController.getUserProfile);
+
+// Update user by id
+router.put("/:id", UserController.updateUserProfile);
+
+// Delete user by id
+router.delete("/:id", UserController.deleteUserProfile);
 
 module.exports = router;
