@@ -1,3 +1,5 @@
+'use client';
+
 import SearchBar from '@components/general/searchbar';
 import LibraryFeed from '@components/library/library_feed.jsx';
 
