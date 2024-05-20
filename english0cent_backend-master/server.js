@@ -4,7 +4,7 @@ require('./config/db');
 const express = require("express"); // Correct import of express
 const app = express(); // Initialize express
 
-const port = 3001;
+const port = 3002;
 
 const UserRouter = require('./api/User');
 
