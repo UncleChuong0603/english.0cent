@@ -1,67 +1,19 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const cors = require("cors");
-const mongoose = require("mongoose");
-const dbConfig = require("./app/config/db.config");
+//mongodb
+require('./config/db');
 
-// Set up server
-const app = express();
+const express = require("express"); // Correct import of express
+const app = express(); // Initialize express
 
-const corsOptions = {
-  origin: "http://localhost:3000",
-};
+const port = 3001;
 
-app.use(cors(corsOptions));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+const UserRouter = require('./api/User');
 
-app.get("/", (req, res) => {
-  res.json({ message: "Hello!" });
-});
+// Middleware for accepting post form data
+app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
+app.use(express.json()); // Parse JSON bodies
 
-// Connect to the database
-const db = require("./app/models");
-const Role = db.role;
+app.use('/user', UserRouter);
 
-mongoose
-  .connect(`mongodb://${dbConfig.HOST}:${dbConfig.PORT}/${dbConfig.DB}`)
-  .then(() => {
-    console.log("Successfully connected to MongoDB.");
-    initial();
-  })
-  .catch((err) => {
-    console.error("Connection error", err);
-    process.exit();
-  });
-
-// Function to initialize database
-async function initial() {
-  try {
-    const count = await Role.estimatedDocumentCount();
-    if (count === 0) {
-      await new Role({ name: "user" }).save();
-      console.log('Added "user" to roles collection');
-
-      await new Role({ name: "moderator" }).save();
-      console.log('Added "moderator" to roles collection');
-
-      await new Role({ name: "admin" }).save();
-      console.log('Added "admin" to roles collection');
-    }
-  } catch (err) {
-    console.error("Error in initial function:", err);
-  }
-}
-
-// Require and use routes
-const authRoutes = require("./app/routes/auth.routes");
-const userRoutes = require("./app/routes/user.routes");
-
-app.use("/api/auth", authRoutes); // Mount auth routes under /api/auth path
-app.use("/api/user", userRoutes); // Mount user routes under /api/user path
-
-// Start server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
 });

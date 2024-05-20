@@ -1,22 +1,16 @@
 'use client';
 
-import SearchBar from '@/components/searchbar';
-import BlogFeed from './components/blog_feed';
-import BlogRelatedPost from './components/blog_related_post';
+import SearchBar from '@components/general/searchbar';
+import BlogFeed from '@components/blog/blog_feed.jsx';
 const page = () => {
   return (
-    <section className='flex-col px-10 py-10 space-y-10'>
+    <section className='flex-col px-10 py-10'>
         <SearchBar />
-        <section className='grid grid-cols-2 gap-10 text-justify'> 
+        <section className='grid grid-cols-2 py-10 gap-10 text-justify'> 
             <BlogFeed />
             <BlogFeed />
             <BlogFeed />
             <BlogFeed />
-        </section>
-        <section className='w-full h-auto grid grid-cols-3 gap-10'>
-            <BlogRelatedPost />
-            <BlogRelatedPost />
-            <BlogRelatedPost />
         </section>
     </section>
   )

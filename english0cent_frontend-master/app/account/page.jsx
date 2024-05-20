@@ -1,6 +1,6 @@
 import React from 'react'
 
-const page = () => {
+const Account_Page = () => {
   return (
     <section className='flex-col px-10 py-10 space-y-10'>
         <section className='w-full  bg-white rounded-3xl py-10'>
@@ -28,7 +28,8 @@ const page = () => {
                     <div className='w-2/3 bg-gray-100 rounded-r-3xl px-3 py-3 text-center'>unclechuong0603@gmail.com</div>
                 </div>
                 <div className='w-full flex-center'>
-                    <div className='w-1/3 h-auto bg-black rounded-3xl text-white text-2xl font-bold px-10 py-3 flex-center cursor-pointer transform transition duration-500 hover:scale-105'>Log out</div>
+                    <div className='w-1/3 h-auto bg-black rounded-3xl text-white text-2xl font-bold px-10 py-3 flex-center cursor-pointer transform transition duration-500 hover:scale-105
+'>Log out</div>
                 </div>
             </div>
         </section>
@@ -36,4 +37,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Account_Page

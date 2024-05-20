@@ -1,4 +1,4 @@
-import CourseProgress from './components/course_progress.jsx';
+import CourseProgress from '@components/dashboard/course_progress.jsx';
 const page = () => {
   return (
     <section className='flex-col px-10 py-10 space-y-10'>

@@ -1,8 +1,8 @@
 import Link from "next/link";
-import CourseProgress from './components/course_progress.jsx';
-import MyLessons from './components/my_lesson.jsx';
-import MyPracticeExercises from './components/my_practice_exercise.jsx';
-import MyAssignment from './components/my_assignment.jsx';
+import CourseProgress from '@components/dashboard/course_progress.jsx';
+import MyLessons from '@components/dashboard/my_lesson.jsx';
+import MyPracticeExercises from '@components/dashboard/my_practice_exercise.jsx';
+import MyAssignment from '@components/dashboard/my_assignment.jsx';
 const DashBoard = () => {
   return (
     <section className='flex-col px-10 py-10 space-y-10'>

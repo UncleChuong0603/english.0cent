@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import CoursePost from '@app/courses/components/course_post';
-import SearchBar from '@components/searchbar';
+import CoursePost from '@/components/course/course_post';
+import SearchBar from '@/components/general/searchbar';
 import courses from '@/data/courses';
 
 const CoursesPage = () => {
