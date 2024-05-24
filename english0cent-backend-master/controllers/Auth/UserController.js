@@ -1,5 +1,6 @@
 const User = require('../../models/User');
 
+// Get user profile
 exports.getProfile = async (req, res) => {
     const userId = req.user.id;
     try {
@@ -15,7 +16,7 @@ exports.getProfile = async (req, res) => {
             user
         });
     } catch (err) {
-        console.log(err);
+        console.error(err);
         res.status(500).json({
             status: "FAILED",
             message: "An error occurred while fetching the profile!"
@@ -23,6 +24,7 @@ exports.getProfile = async (req, res) => {
     }
 };
 
+// Update user profile
 exports.updateProfile = async (req, res) => {
     const userId = req.user.id;
     const updates = req.body;
@@ -40,7 +42,7 @@ exports.updateProfile = async (req, res) => {
             user
         });
     } catch (err) {
-        console.log(err);
+        console.error(err);
         res.status(500).json({
             status: "FAILED",
             message: "An error occurred while updating the profile!"
@@ -48,6 +50,7 @@ exports.updateProfile = async (req, res) => {
     }
 };
 
+// Deactivate user account
 exports.deactivateAccount = async (req, res) => {
     const userId = req.user.id;
     try {
@@ -64,7 +67,7 @@ exports.deactivateAccount = async (req, res) => {
             user
         });
     } catch (err) {
-        console.log(err);
+        console.error(err);
         res.status(500).json({
             status: "FAILED",
             message: "An error occurred while deactivating the account!"
@@ -72,6 +75,7 @@ exports.deactivateAccount = async (req, res) => {
     }
 };
 
+// Delete user account
 exports.deleteAccount = async (req, res) => {
     const userId = req.user.id;
     try {
@@ -87,7 +91,7 @@ exports.deleteAccount = async (req, res) => {
             message: "Account deleted successfully!"
         });
     } catch (err) {
-        console.log(err);
+        console.error(err);
         res.status(500).json({
             status: "FAILED",
             message: "An error occurred while deleting the account!"
@@ -95,8 +99,9 @@ exports.deleteAccount = async (req, res) => {
     }
 };
 
+// Upgrade user plan
 exports.upgradePlan = async (req, res) => {
-    const userId = req.user.id; // Assuming user ID is available in req.user.id
+    const userId = req.user.id;
     const { plan } = req.body;
 
     if (!['free', 'paid'].includes(plan)) {
@@ -123,7 +128,7 @@ exports.upgradePlan = async (req, res) => {
             message: `User plan upgraded to ${plan} successfully!`
         });
     } catch (err) {
-        console.log(err);
+        console.error(err);
         res.status(500).json({
             status: "FAILED",
             message: "An error occurred while upgrading the plan!"

@@ -4,6 +4,9 @@ const nodemailer = require('nodemailer');
 const { v4: uuidv4 } = require('uuid');
 const path = require('path');
 require('dotenv').config();
+const jwt = require('jsonwebtoken');
+
+const JWT_SECRET = process.env.JWT_SECRET;
 
 const transporter = nodemailer.createTransport({
     host: 'smtp.zoho.com',
@@ -203,9 +206,11 @@ exports.signin = async (req, res) => {
         const match = await bcrypt.compare(password, user.password);
         if (match) {
             if (user.verified) {
+                const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '1h' });
                 res.json({
                     status: "SUCCESS",
-                    message: "User signed in successfully!"
+                    message: "User signed in successfully!",
+                    token: token
                 });
             } else {
                 res.json({
@@ -228,3 +233,12 @@ exports.signin = async (req, res) => {
         });
     }
 };
+
+// Signout function
+exports.signout = (req, res) => {
+    res.json({
+        status: "SUCCESS",
+        message: "User signed out successfully!"
+    });
+};
+

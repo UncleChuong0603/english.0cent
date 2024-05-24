@@ -25,28 +25,35 @@ const page = () => {
 
   const handleSignIn = async () => {
     try {
-      const response = await fetch("http://localhost:5000/auth/signin", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-      });
+        const response = await fetch('http://localhost:5000/auth/signin', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email,
+                password,
+            }),
+        });
 
-      if (response.ok) {
-        router.push("/dashboard"); // Redirect to dashboard on successful sign in
-      } else {
-        const data = await response.json();
-        setErrorMessage(data.message);
-      }
+        if (response.ok) {
+            const data = await response.json();
+            const token = data.token;
+
+            // Store the token in local storage or cookies
+            localStorage.setItem('token', token);
+
+            // Redirect to the dashboard
+            router.push('/dashboard');
+        } else {
+            const data = await response.json();
+            setErrorMessage(data.message);
+        }
     } catch (error) {
-      console.error("Error signing in:", error);
-      setErrorMessage("An error occurred. Please try again.");
+        console.error('Error signing in:', error);
+        setErrorMessage('An error occurred. Please try again.');
     }
-  };
+};
   
   return (
     <section className="w-full h-full flex space-x-5">

@@ -30,7 +30,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Auth & User routes
-const AuthRouter = require('./routes/Auth');
+const AuthRouter = require('./routes/Auth/');
 app.use('/', AuthRouter);
 
 // Course routes
