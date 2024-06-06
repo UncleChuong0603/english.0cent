@@ -5,7 +5,7 @@ import Link from "next/link"
 
 const page = () => {
   return (
-    <main className="flex-col space-y-5">
+    <main className="flex-col space-y-4">
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         <Card>
           <CardHeader>
@@ -80,7 +80,7 @@ const page = () => {
           </CardContent>
         </Card>
       </div>
-      <div className="w-full h-auto flex gap-5">
+      <div className="w-full h-auto flex gap-4">
         <div className="w-1/2 h-auto bg-white rounded-xl">
         <div className="grid gap-4 md:p-6">
           <div className="grid gap-2 rounded-l dark:bg-gray-800/40">

@@ -36,3 +36,7 @@ app.use('/', AuthRouter);
 // Course routes
 const CourseRouter = require('./routes/Course');
 app.use('/', CourseRouter);
+
+// API routes
+const APIRouter = require('./routes/api');
+app.use('/', APIRouter);

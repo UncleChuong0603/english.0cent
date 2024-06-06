@@ -108,7 +108,7 @@ const Page = () => {
                     Enter your email and password to sign up.
                   </p>
                 </div>
-                <div className="space-y-5">
+                <div className="space-y-4">
                   <div>
                     <Label htmlFor="email">Email</Label>
                     <Input
@@ -144,7 +144,7 @@ const Page = () => {
                     <p className="text-red-500">{errorMessage}</p>
                   )}
                 </div>
-                <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-4">
                   <Button className="w-full" onClick={handleSignUp}>
                     Sign up
                   </Button>

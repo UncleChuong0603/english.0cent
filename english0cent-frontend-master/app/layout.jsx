@@ -1,60 +1,60 @@
 "use client";
 
+// Next imports
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
+// Font import
 const inter = Inter({ subsets: ["latin"] });
 
+// Check if token is valid
 const isTokenValid = () => {
   const token = localStorage.getItem('token');
   return !!token; // Returns true if token exists, false otherwise
 };
 
+// Nav items
+const navItems = [
+  { href: "/", src: "/assets/icons/Home.png", alt: "Logo of Home Page", label: "Home" },
+  { href: "/dashboard", src: "/assets/icons/DashBoard.png", alt: "Logo of Dashboard", label: "Dashboard", requiresAuth: true },
+  { href: "/analytics", src: "/assets/icons/Analytics.png", alt: "Icon of Analytics", label: "Analytics" },
+  { href: "/course", src: "/assets/icons/Courses.png", alt: "Icon of Courses", label: "Course" },
+  { href: "/document", src: "/assets/icons/Document.png", alt: "Icon of Document", label: "Document" },
+  { href: "/blog", src: "/assets/icons/Blogs.png", alt: "Icon of Blogs", label: "Blog" },
+];
+
+// Layout
 const RootLayout = ({ children }) => {
   const router = useRouter();
-  const [activeLink, setActiveLink] = useState("/");
+  const pathname = usePathname();
+  const [activeLink, setActiveLink] = useState(pathname);
 
-  const handleDashboardClick = (e) => {
+  // Handle link click
+  const handleLinkClick = (e, item) => {
     e.preventDefault();
-    if (isTokenValid()) {
-      router.push('/dashboard');
-    } else {
+    if (item.requiresAuth && !isTokenValid()) {
       router.push('/auth/signin');
+    } else {
+      router.push(item.href);
     }
+    setActiveLink(item.href);
   };
 
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning scroll-mood="smooth">
       <body className={inter.className}>
-        <section className="w-full h-screen flex hide-scrollbar p-5">
-          <div className="w-1/12 h-full bg-white rounded-3xl flex-col space-y-5 p-3">
-            <div
-              className={`w-auto h-auto py-5 rounded-2xl cursor-pointer transform transition duration-500 hover:scale-105 ${activeLink === "/dashboard" ? 'bg-yellow-300' : 'hover:bg-yellow-300'}`}
-              onClick={(e) => {
-                handleDashboardClick(e);
-                setActiveLink("/dashboard");
-              }}
-            >
-              <div className='flex-center px-3'>
-                <Link href="/dashboard">
-                  <Image
-                    src="/assets/icons/DashBoard.png"
-                    width={30}
-                    height={30}
-                    alt={"Logo of Dashboard"}
-                  />
-                </Link>
-              </div>
-            </div>
+        <section className="w-full h-screen flex hide-scrollbar p-4">
+          {/* Layout with header bar */}
+          <div className="w-1/12 h-auto bg-white rounded-3xl flex-col space-y-4 p-4">
             {navItems.map((item, index) => (
               <div
                 key={index}
                 className={`w-auto h-auto py-5 rounded-2xl cursor-pointer transform transition duration-500 hover:scale-105 ${activeLink === item.href ? 'bg-yellow-300' : 'hover:bg-yellow-300'}`}
-                onClick={() => setActiveLink(item.href)}
+                onClick={(e) => handleLinkClick(e, item)}
               >
                 <div className='flex-center px-3'>
                   <Link href={item.href}>
@@ -69,7 +69,9 @@ const RootLayout = ({ children }) => {
               </div>
             ))}
           </div>
-          <div className="w-11/12 h-full flex-col pl-5">
+          
+          {/* Layout with content */}
+          <div className="w-11/12 h-full flex-col pl-4">
             <div className="w-full h-full overflow-auto rounded-3xl hide-scrollbar">{children}</div>
           </div>
         </section>
@@ -77,13 +79,5 @@ const RootLayout = ({ children }) => {
     </html>
   );
 };
-
-const navItems = [
-  { href: "/", src: "/assets/icons/Home.png", alt: "Icon of Home Page", label: "Home Page" },
-  { href: "/analytics", src: "/assets/icons/Analytics.png", alt: "Icon of Analytics", label: "Analytics" },
-  { href: "/courses", src: "/assets/icons/Courses.png", alt: "Icon of Courses", label: "Courses" },
-  { href: "/library", src: "/assets/icons/Library.png", alt: "Icon of Library", label: "Library" },
-  { href: "/blogs", src: "/assets/icons/Blogs.png", alt: "Icon of Blogs", label: "Blogs" },
-];
 
 export default RootLayout;

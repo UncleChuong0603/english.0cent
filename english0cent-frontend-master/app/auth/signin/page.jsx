@@ -87,7 +87,7 @@ const page = () => {
                   Enter your email and password to Sign in.
                 </p>
               </div>
-              <div className="space-y-5">
+              <div className="space-y-4">
                 <div>
                   <Label htmlFor="email">Email</Label>
                   <Input
@@ -110,7 +110,7 @@ const page = () => {
                   />
                 </div>
               </div>
-              <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-4">
                 <Button className="w-full" onClick={handleSignIn}>
                   Sign in
                 </Button>

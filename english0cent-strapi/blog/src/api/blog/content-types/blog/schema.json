@@ -1,0 +1,51 @@
+{
+  "kind": "collectionType",
+  "collectionName": "blogs",
+  "info": {
+    "singularName": "blog",
+    "pluralName": "blogs",
+    "displayName": "Blog",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "Title": {
+      "type": "string",
+      "required": true,
+      "maxLength": 255
+    },
+    "Category": {
+      "type": "enumeration",
+      "enum": [
+        "TOEIC",
+        "IELTS",
+        "Grammar",
+        "Vocabulary",
+        "Study Tips"
+      ],
+      "required": true
+    },
+    "Summary": {
+      "type": "string",
+      "required": true,
+      "maxLength": 255
+    },
+    "Content": {
+      "type": "blocks",
+      "required": true
+    },
+    "slug": {
+      "type": "string",
+      "required": true,
+      "maxLength": 255
+    },
+    "PublishDate": {
+      "type": "date",
+      "required": true,
+      "default": "2024-03-06"
+    }
+  }
+}
