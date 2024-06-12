@@ -34,7 +34,7 @@ const donate = () => {
                 Donate
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-[400px] flex mt-4">
+            <PopoverContent className="w-[400px] flex mt-3">
                 <Tabs defaultValue="account" className="w-[400px]">
                 <TabsList className="grid w-full grid-cols-2">
                     {donateContent.map((tab) => (

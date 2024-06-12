@@ -1,353 +1,132 @@
-/**
- * v0 by Vercel.
- * @see https://v0.dev/t/LnbNNJJRN8N
- * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
- */
-import Link from "next/link"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
+"use client";
+
+import React, { useEffect, useState } from 'react';
+import Link from "next/link";
+import { useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
+import { Button } from "@/components/ui/button";
+import { CardContent, Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import fetchDocuments from '@/helpers/fetchDocuments';
+
+const DocumentCategory = ({ category, count, handleClick, isSelected }) => (
+  <li>
+    <div
+      className={`cursor-pointer flex items-center justify-between gap-2 rounded-lg px-4 py-2 text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-50 ${isSelected ? 'font-bold' : ''}`}
+      onClick={() => handleClick(category)}
+    >
+      <span>{category}</span>
+      <Badge>{count}</Badge>
+    </div>
+  </li>
+);
 
 export default function Component() {
+  const [documents, setDocuments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [categories, setCategories] = useState({});
+  const [selectedCategory, setSelectedCategory] = useState(null);
+
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const fetchDocumentData = async () => {
+      try {
+        const docs = await fetchDocuments('');
+        if (docs.data.length === 0) {
+          setError('No documents found');
+        } else {
+          setDocuments(docs.data);
+          const categoryCount = docs.data.reduce((acc, doc) => {
+            const category = doc.attributes.Category;
+            acc[category] = acc[category] ? acc[category] + 1 : 1;
+            return acc;
+          }, {});
+          categoryCount["All Documents"] = docs.data.length;
+          setCategories(categoryCount);
+        }
+      } catch (err) {
+        setError('Error fetching document data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDocumentData();
+  }, []);
+
+  useEffect(() => {
+    const category = searchParams.get('category');
+    setSelectedCategory(category);
+    if (category) {
+      localStorage.setItem('selectedCategory', category);
+    } else {
+      localStorage.removeItem('selectedCategory');
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
+    const storedCategory = localStorage.getItem('selectedCategory');
+    if (storedCategory) {
+      setSelectedCategory(storedCategory);
+    }
+  }, []);
+
+  const handleCategoryClick = (category) => {
+    const newCategory = category === "All Documents" ? null : category;
+    setSelectedCategory(newCategory);
+    router.push(`/document${newCategory ? `?category=${newCategory}` : ''}`);
+  };
+
+  const filteredDocuments = selectedCategory
+    ? documents.filter(doc => doc.attributes.Category === selectedCategory)
+    : documents;
+
+  if (loading) return <div className='w-full h-[608px] bg-white rounded-3xl flex-center'>Loading...</div>;
+  if (error) return <div className='w-full h-[608px] bg-white rounded-3xl flex-center'>{error}</div>;
+
   return (
-    <div className="flex flex-col bg-white">
-      <div className="container flex gap-8 py-5">
-        <div className="hidden w-64 flex-col gap-4 md:flex">
-          <div className="sticky top-4 space-y-4">
-            <h3 className="text-lg font-semibold">Document Categories</h3>
-            <nav>
-              <ul className="space-y-2">
-                <li>
-                  <Link
-                    className="flex items-center gap-2 rounded-lg bg-gray-100 px-3 py-2 text-gray-900 transition-colors hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-50 dark:hover:bg-gray-700"
-                    href="#"
-                  >
-                    <FileIcon className="h-5 w-5" />
-                    <span>Grammar</span>
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    className="flex items-center gap-2 rounded-lg px-3 py-2 text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-50"
-                    href="#"
-                  >
-                    <FileIcon className="h-5 w-5" />
-                    <span>Vocabulary</span>
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    className="flex items-center gap-2 rounded-lg px-3 py-2 text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-50"
-                    href="#"
-                  >
-                    <FileIcon className="h-5 w-5" />
-                    <span>Pronunciation</span>
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    className="flex items-center gap-2 rounded-lg px-3 py-2 text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-50"
-                    href="#"
-                  >
-                    <FileIcon className="h-5 w-5" />
-                    <span>Idioms</span>
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    className="flex items-center gap-2 rounded-lg px-3 py-2 text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-50"
-                    href="#"
-                  >
-                    <FileIcon className="h-5 w-5" />
-                    <span>Writing</span>
-                  </Link>
-                </li>
-              </ul>
-            </nav>
-          </div>
+    <div className={`w-full p-8 flex bg-white rounded-3xl ${filteredDocuments.length < 3 ? 'h-[608px]' : 'h-auto'}`}>
+      <div className="hidden w-80  flex-col gap-4 md:flex">
+        <div className="sticky top-8 space-y-4">
+          <h3 className="text-lg font-semibold">Categories</h3>
+          <nav>
+            <ul className="space-y-2">
+              {Object.keys(categories).map((category, index) => (
+                <DocumentCategory
+                  key={index}
+                  category={category}
+                  count={categories[category]}
+                  handleClick={handleCategoryClick}
+                  isSelected={selectedCategory === category || (!selectedCategory && category === "All Documents")}
+                />
+              ))}
+            </ul>
+          </nav>
         </div>
-        <div className="container flex-1">
-          <h2 className="mb-4 text-2xl font-semibold md:mb-6">All Documents</h2>
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-            <div className="group relative overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-all hover:shadow-md dark:border-gray-800 dark:bg-gray-950">
-              <Link className="absolute inset-0 z-10" href="#">
-                <span className="sr-only">View document</span>
-              </Link>
-              <div className="aspect-[4/3] overflow-hidden">
-                <img
-                  alt="Document Thumbnail"
-                  className="h-full w-full object-cover transition-all group-hover:scale-105"
-                  height={300}
-                  src="/assets/placeholder.svg"
-                  style={{
-                    aspectRatio: "400/300",
-                    objectFit: "cover",
-                  }}
-                  width={400}
-                />
-              </div>
-              <div className="p-4">
-                <h3 className="mb-2 text-lg font-semibold">English Grammar Essentials</h3>
-                <p className="mb-4 text-gray-500 dark:text-gray-400">
-                  A comprehensive guide to mastering English grammar.
+      </div>
+      <div className="container">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          {filteredDocuments.map((document, index) => (
+            <Card key={index}>
+              <CardContent>
+                <h3 className="text-xl font-bold py-5">{document.attributes.Title}</h3>
+                <p className="text-gray-500 dark:text-gray-400 mb-4">
+                  {document.attributes.Summary}
                 </p>
-                <Button className="w-full" size="sm">
-                  Download
-                </Button>
-              </div>
-            </div>
-            <div className="group relative overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-all hover:shadow-md dark:border-gray-800 dark:bg-gray-950">
-              <Link className="absolute inset-0 z-10" href="#">
-                <span className="sr-only">View document</span>
-              </Link>
-              <div className="aspect-[4/3] overflow-hidden">
-                <img
-                  alt="Document Thumbnail"
-                  className="h-full w-full object-cover transition-all group-hover:scale-105"
-                  height={300}
-                  src="/assets/placeholder.svg"
-                  style={{
-                    aspectRatio: "400/300",
-                    objectFit: "cover",
-                  }}
-                  width={400}
-                />
-              </div>
-              <div className="p-4">
-                <h3 className="mb-2 text-lg font-semibold">English Grammar Essentials</h3>
-                <p className="mb-4 text-gray-500 dark:text-gray-400">
-                  A comprehensive guide to mastering English grammar.
-                </p>
-                <Button className="w-full" size="sm">
-                  Download
-                </Button>
-              </div>
-            </div>
-            <div className="group relative overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-all hover:shadow-md dark:border-gray-800 dark:bg-gray-950">
-              <Link className="absolute inset-0 z-10" href="#">
-                <span className="sr-only">View document</span>
-              </Link>
-              <div className="aspect-[4/3] overflow-hidden">
-                <img
-                  alt="Document Thumbnail"
-                  className="h-full w-full object-cover transition-all group-hover:scale-105"
-                  height={300}
-                  src="/assets/placeholder.svg"
-                  style={{
-                    aspectRatio: "400/300",
-                    objectFit: "cover",
-                  }}
-                  width={400}
-                />
-              </div>
-              <div className="p-4">
-                <h3 className="mb-2 text-lg font-semibold">English Grammar Essentials</h3>
-                <p className="mb-4 text-gray-500 dark:text-gray-400">
-                  A comprehensive guide to mastering English grammar.
-                </p>
-                <Button className="w-full" size="sm">
-                  Download
-                </Button>
-              </div>
-            </div>
-            <div className="group relative overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-all hover:shadow-md dark:border-gray-800 dark:bg-gray-950">
-              <Link className="absolute inset-0 z-10" href="#">
-                <span className="sr-only">View document</span>
-              </Link>
-              <div className="aspect-[4/3] overflow-hidden">
-                <img
-                  alt="Document Thumbnail"
-                  className="h-full w-full object-cover transition-all group-hover:scale-105"
-                  height={300}
-                  src="/assets/placeholder.svg"
-                  style={{
-                    aspectRatio: "400/300",
-                    objectFit: "cover",
-                  }}
-                  width={400}
-                />
-              </div>
-              <div className="p-4">
-                <h3 className="mb-2 text-lg font-semibold">English Grammar Essentials</h3>
-                <p className="mb-4 text-gray-500 dark:text-gray-400">
-                  A comprehensive guide to mastering English grammar.
-                </p>
-                <Button className="w-full" size="sm">
-                  Download
-                </Button>
-              </div>
-            </div>
-            <div className="group relative overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-all hover:shadow-md dark:border-gray-800 dark:bg-gray-950">
-              <Link className="absolute inset-0 z-10" href="#">
-                <span className="sr-only">View document</span>
-              </Link>
-              <div className="aspect-[4/3] overflow-hidden">
-                <img
-                  alt="Document Thumbnail"
-                  className="h-full w-full object-cover transition-all group-hover:scale-105"
-                  height={300}
-                  src="/assets/placeholder.svg"
-                  style={{
-                    aspectRatio: "400/300",
-                    objectFit: "cover",
-                  }}
-                  width={400}
-                />
-              </div>
-              <div className="p-4">
-                <h3 className="mb-2 text-lg font-semibold">English Grammar Essentials</h3>
-                <p className="mb-4 text-gray-500 dark:text-gray-400">
-                  A comprehensive guide to mastering English grammar.
-                </p>
-                <Button className="w-full" size="sm">
-                  Download
-                </Button>
-              </div>
-            </div>
-            <div className="group relative overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-all hover:shadow-md dark:border-gray-800 dark:bg-gray-950">
-              <Link className="absolute inset-0 z-10" href="#">
-                <span className="sr-only">View document</span>
-              </Link>
-              <div className="aspect-[4/3] overflow-hidden">
-                <img
-                  alt="Document Thumbnail"
-                  className="h-full w-full object-cover transition-all group-hover:scale-105"
-                  height={300}
-                  src="/assets/placeholder.svg"
-                  style={{
-                    aspectRatio: "400/300",
-                    objectFit: "cover",
-                  }}
-                  width={400}
-                />
-              </div>
-              <div className="p-4">
-                <h3 className="mb-2 text-lg font-semibold">English Grammar Essentials</h3>
-                <p className="mb-4 text-gray-500 dark:text-gray-400">
-                  A comprehensive guide to mastering English grammar.
-                </p>
-                <Button className="w-full" size="sm">
-                  Download
-                </Button>
-              </div>
-            </div>
-            <div className="group relative overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-all hover:shadow-md dark:border-gray-800 dark:bg-gray-950">
-              <Link className="absolute inset-0 z-10" href="#">
-                <span className="sr-only">View document</span>
-              </Link>
-              <div className="aspect-[4/3] overflow-hidden">
-                <img
-                  alt="Document Thumbnail"
-                  className="h-full w-full object-cover transition-all group-hover:scale-105"
-                  height={300}
-                  src="/assets/placeholder.svg"
-                  style={{
-                    aspectRatio: "400/300",
-                    objectFit: "cover",
-                  }}
-                  width={400}
-                />
-              </div>
-              <div className="p-4">
-                <h3 className="mb-2 text-lg font-semibold">English Grammar Essentials</h3>
-                <p className="mb-4 text-gray-500 dark:text-gray-400">
-                  A comprehensive guide to mastering English grammar.
-                </p>
-                <Button className="w-full" size="sm">
-                  Download
-                </Button>
-              </div>
-            </div>
-            <div className="group relative overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-all hover:shadow-md dark:border-gray-800 dark:bg-gray-950">
-              <Link className="absolute inset-0 z-10" href="#">
-                <span className="sr-only">View document</span>
-              </Link>
-              <div className="aspect-[4/3] overflow-hidden">
-                <img
-                  alt="Document Thumbnail"
-                  className="h-full w-full object-cover transition-all group-hover:scale-105"
-                  height={300}
-                  src="/assets/placeholder.svg"
-                  style={{
-                    aspectRatio: "400/300",
-                    objectFit: "cover",
-                  }}
-                  width={400}
-                />
-              </div>
-              <div className="p-4">
-                <h3 className="mb-2 text-lg font-semibold">English Grammar Essentials</h3>
-                <p className="mb-4 text-gray-500 dark:text-gray-400">
-                  A comprehensive guide to mastering English grammar.
-                </p>
-                <Button className="w-full" size="sm">
-                  Download
-                </Button>
-              </div>
-            </div>
-          </div>
+                <div className="flex justify-end space-x-4">
+                  <Button variant="outline">{document.attributes.Category}</Button>
+                  <Button>
+                    <Link href={document.attributes.Link} target="_blank">Download</Link>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
       </div>
     </div>
-  )
-}
-
-function BookIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20" />
-    </svg>
-  )
-}
-
-
-function FileIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
-      <path d="M14 2v4a2 2 0 0 0 2 2h4" />
-    </svg>
-  )
-}
-
-
-function SearchIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="11" cy="11" r="8" />
-      <path d="m21 21-4.3-4.3" />
-    </svg>
-  )
+  );
 }

@@ -1,11 +1,13 @@
 "use client";
 
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState } from 'react';
+import { Badge } from "@/components/ui/badge";
+import { useRouter } from 'next/navigation';
+
 import fetchBlogs from '@/helpers/fetchBlogs';
 import getRandomBlogs from '@/helpers/getRandomBlogs';
 import calculateReadingTime from '@/helpers/calculateReadingTime';
-import { Badge } from "@/components/ui/badge";
-import { useRouter } from 'next/navigation'; // Import the router
+import slugifyHeading from '@/helpers/slugifyHeading';
 
 const BlogDetails = (props) => {
   const [blogContent, setBlogContent] = useState(null);
@@ -13,24 +15,30 @@ const BlogDetails = (props) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [toc, setToc] = useState([]);
-  const contentRef = useRef(null);
-  const router = useRouter(); // Initialize the router
+  const [activeId, setActiveId] = useState(null);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchBlogData = async () => {
       try {
+        console.log('Fetching blog data...');
         const blogs = await fetchBlogs(`filters[slug][$eq]=${props.params.slug}`);
+        console.log('Blogs fetched:', blogs);
         if (blogs.data.length === 0) {
           setError('Blog not found');
+          console.error('Blog not found');
         } else {
           const blog = blogs.data[0];
+          console.log('Blog content:', blog);
           setBlogContent(blog);
 
           const randomBlogData = await getRandomBlogs(blog.id);
+          console.log('Random blogs:', randomBlogData);
           setRandomBlogs(randomBlogData);
         }
       } catch (err) {
         setError('Error fetching blog data');
+        console.error('Error fetching blog data:', err);
       } finally {
         setLoading(false);
       }
@@ -41,44 +49,59 @@ const BlogDetails = (props) => {
 
   useEffect(() => {
     if (blogContent) {
-      const headings = blogContent.attributes.Content.filter(item => item.type === 'heading');
+      console.log('Setting table of contents...');
+      const headings = blogContent.attributes.Content
+        .filter(item => item.type === 'heading')
+        .map((item, index) => ({
+          id: slugifyHeading(item.children[0].text),
+          text: item.children[0].text,
+          level: item.level
+        }));
+      console.log('Headings:', headings);
       setToc(headings);
     }
   }, [blogContent]);
 
-  const handleIntersect = useCallback((entries) => {
-    entries.forEach(entry => {
-      const tocItems = document.querySelectorAll('.toc-item');
-      const itemId = entry.target.id;
-      tocItems.forEach(item => {
-        const itemTocId = item.getAttribute('data-id');
-        if (itemTocId === itemId) {
-          if (entry.isIntersecting) {
-            item.classList.add('rounded-lg', 'bg-yellow-300', 'font-bold', 'p-4');
-          } else {
-            item.classList.remove('rounded-lg', 'bg-yellow-300', 'font-bold', 'p-4');
+  useEffect(() => {
+    const handleScroll = () => {
+      const tocElement = document.querySelector('.table-of-contents');
+      const contentElement = document.querySelector('.blog-content');
+  
+      if (!tocElement || !contentElement) return; // Exit early if table of contents or content element is not found
+      
+      const tocOffsetTop = tocElement.offsetTop;
+      console.log('TOC Offset Top:', tocOffsetTop);
+      const { scrollTop } = contentElement;
+      console.log('Scroll Top:', scrollTop);
+      let activeHeadingId = null;
+  
+      toc.forEach((heading) => {
+        const element = document.getElementById(heading.id);
+        if (element) {
+          const offsetTop = element.offsetTop - contentElement.offsetTop;
+          console.log(`Checking heading: ${heading.id}, Offset Top: ${offsetTop}`);
+          if (offsetTop >= tocOffsetTop + 200) {
+            activeHeadingId = heading.id;
+            console.log('Active Heading ID set to:', activeHeadingId);
+            return; // Exit loop early since we found the first heading that meets the condition
           }
         }
       });
-    });
-  }, []);
-
-  useEffect(() => {
-    if (!contentRef.current) return;
-
-    const observer = new IntersectionObserver(handleIntersect, {
-      root: null,
-      rootMargin: '0px',
-      threshold: 0.3
-    });
-
-    const headings = contentRef.current.querySelectorAll('h2, h3');
-    headings.forEach(heading => observer.observe(heading));
-
-    return () => {
-      headings.forEach(heading => observer.unobserve(heading));
+  
+      console.log('Final Active Heading ID:', activeHeadingId);
+      setActiveId(activeHeadingId);
     };
-  }, [handleIntersect, toc]);
+  
+    window.addEventListener('scroll', handleScroll);
+    console.log('Scroll event listener added.');
+  
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      console.log('Scroll event listener removed.');
+    };
+  }, [toc]);
+  
+  
 
   if (loading) return <div className='w-full h-[608px] bg-white rounded-3xl flex-center'>Loading...</div>;
   if (error) return <div className='w-full h-[608px] bg-white rounded-3xl flex-center'>{error}</div>;
@@ -87,7 +110,8 @@ const BlogDetails = (props) => {
     return content.map((item, index) => {
       if (item.type === 'heading') {
         const Tag = `h${item.level}`;
-        return <Tag key={index} id={`heading-${index}`} className="mt-12" dangerouslySetInnerHTML={{ __html: item.children[0].text }} />;
+        const id = slugifyHeading(item.children[0].text);
+        return <Tag key={index} id={id} className="mt-12" dangerouslySetInnerHTML={{ __html: item.children[0].text }} />;
       } else if (item.type === 'paragraph') {
         return <p key={index} className="mt-4" dangerouslySetInnerHTML={{ __html: item.children[0].text }} />;
       }
@@ -96,22 +120,22 @@ const BlogDetails = (props) => {
   };
 
   const handleBadgeClick = (category) => {
-    router.push(`/blog?category=${category}`); // Redirect to /blog with the category as a query parameter
+    router.push(`/blog?category=${category}`);
   };
 
   return (
     <div className='flex space-x-4'>
       <div className='w-1/4 h-[608px] rounded-3xl bg-white sticky top-0 p-8 space-y-4'>
-        <div className="text-2xl font-bold">Table of Content</div>
+        <div className="text-2xl font-bold table-of-contents">Table of Contents</div>
         <ul className='space-y-4'>
           {toc.map((item, index) => (
-            <li key={index} className='toc-item' data-id={`heading-${index}`}>
-              <a href={`#heading-${index}`}>{item.children[0].text}</a>
+            <li key={index} className={`toc-item ${activeId === item.id ? 'rounded-lg bg-yellow-300 font-bold p-4' : ''}`} data-id={item.id}>
+              <a href={`#${item.id}`}>{item.text}</a>
             </li>
           ))}
         </ul>
       </div>
-      <div className='w-3/4 h-[608px] rounded-3xl bg-white hide-scrollbar' ref={contentRef}>
+      <div className='w-3/4 h-[608px] rounded-3xl bg-white hide-scrollbar blog-content'>
         <div className="p-8 flex-col space-y-4">
           <h1>{blogContent.attributes.Title}</h1>
           <div className="flex space-x-8">

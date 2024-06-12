@@ -1,4 +1,4 @@
-const EmailSubscription = require('../models/User/EmailSubscription');
+const EmailSubscription = require('../models/Input/EmailSubscription');
 require('../config/db'); // Ensure database connection is established
 
 module.exports = async (req, res) => {

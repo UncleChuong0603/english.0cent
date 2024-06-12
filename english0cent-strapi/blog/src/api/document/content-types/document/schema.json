@@ -1,0 +1,46 @@
+{
+  "kind": "collectionType",
+  "collectionName": "documents",
+  "info": {
+    "singularName": "document",
+    "pluralName": "documents",
+    "displayName": "Document",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "Title": {
+      "type": "string",
+      "required": true,
+      "maxLength": 255
+    },
+    "Category": {
+      "type": "enumeration",
+      "enum": [
+        "TOEIC",
+        "IELTS",
+        "Grammar",
+        "Vocabulary",
+        "Study Tips",
+        "My Recommendations"
+      ],
+      "required": true,
+      "default": "My Recommendations"
+    },
+    "Summary": {
+      "type": "string",
+      "required": true
+    },
+    "Link": {
+      "type": "string",
+      "required": true
+    },
+    "slug": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

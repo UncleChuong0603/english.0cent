@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -6,6 +6,7 @@ import { PopoverTrigger, PopoverContent, Popover } from "@/components/ui/popover
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
+import axios from 'axios';
 
 const feedback = () => {
   const [feedbackData, setFeedbackData] = useState({
@@ -22,16 +23,20 @@ const feedback = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle feedback submission logic here
-    console.log("Feedback submitted:", feedbackData);
-    // Reset form
-    setFeedbackData({
-      name: "",
-      email: "",
-      message: "",
-    });
+    try {
+      await axios.post('http://localhost:5000/api/feedback', feedbackData);
+      alert('Feedback submitted successfully!');
+      // Reset form
+      setFeedbackData({
+        name: "",
+        email: "",
+        message: "",
+      });
+    } catch (error) {
+      alert('Feedback submission failed. Please try again.');
+    }
   };
 
   return (
@@ -43,7 +48,7 @@ const feedback = () => {
             Feedback
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[400px] mt-4 p-4">
+        <PopoverContent className="w-[400px] mt-3 p-4">
           <Card>
             <CardHeader className="flex-center">
               <CardTitle>Feedback</CardTitle>
@@ -88,7 +93,7 @@ const feedback = () => {
                     required
                   />
                 </div>
-                <Button type="submit" className="w-full bg-black text-white rounded-md px-4 py-2 hover:bg-blue-600 transition-colors">
+                <Button type="submit" className="w-full bg-black text-white rounded-md px-4 py-2">
                   Submit Feedback
                 </Button>
               </form>

@@ -1,0 +1,51 @@
+{
+  "kind": "collectionType",
+  "collectionName": "courses",
+  "info": {
+    "singularName": "course",
+    "pluralName": "courses",
+    "displayName": "Course",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "Title": {
+      "type": "string",
+      "required": true
+    },
+    "slug": {
+      "type": "string",
+      "required": true
+    },
+    "Combo": {
+      "type": "json",
+      "required": true
+    },
+    "Summary": {
+      "type": "string",
+      "required": true
+    },
+    "Level": {
+      "type": "enumeration",
+      "enum": [
+        "Beginner",
+        "Intermediate",
+        "Advanced"
+      ],
+      "required": true
+    },
+    "Target": {
+      "type": "enumeration",
+      "enum": [
+        "Grammar",
+        "Vocabulary",
+        "TOEIC",
+        "IELTS"
+      ],
+      "required": true
+    }
+  }
+}

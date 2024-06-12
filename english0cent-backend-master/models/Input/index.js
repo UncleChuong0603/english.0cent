@@ -1,7 +1,7 @@
 const EmailSubscription = require('./EmailSubscription');
-const Feedback = require('./feedback');
+const Feedback = require('./Feedback');
 
 module.exports = {
     EmailSubscription,
-    Feedback
+    Feedback,
 };

@@ -27,7 +27,7 @@ const handleSignout = () => {
     .then((data) => {
       console.log(data.message);
       // Redirect the user to the sign-in page
-      window.location.href = "/auth/signin";
+      window.location.href = "/";
     })
     .catch((err) => console.error(err));
 };
@@ -54,7 +54,7 @@ const Account = () => {
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="mt-3">
+        <DropdownMenuContent align="end" className="mt-4">
           <DropdownMenuItem>Profile</DropdownMenuItem>
           <DropdownMenuItem>Settings</DropdownMenuItem>
           <DropdownMenuSeparator />
