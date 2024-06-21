@@ -31,9 +31,10 @@
     "Level": {
       "type": "enumeration",
       "enum": [
-        "Beginner",
-        "Intermediate",
-        "Advanced"
+        "Easy",
+        "Medium",
+        "Hard",
+        "Super Hard"
       ],
       "required": true
     },
@@ -46,6 +47,21 @@
         "IELTS"
       ],
       "required": true
+    },
+    "Modules": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::module.module"
+    },
+    "Documents": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::document.document"
+    },
+    "Final_Test": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::final-test.final-test"
     }
   }
 }

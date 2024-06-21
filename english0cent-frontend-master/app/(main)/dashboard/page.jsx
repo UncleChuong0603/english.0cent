@@ -3,7 +3,7 @@ import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
 
-const page = () => {
+const Dashboard = () => {
   return (
     <main className="flex-col space-y-4">
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -207,4 +207,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Dashboard

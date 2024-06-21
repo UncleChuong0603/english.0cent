@@ -13,7 +13,7 @@ const newsletter = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-        await axios.post('http://localhost:5000/api/emailsubscription', { email });
+        await axios.post(`${config.server}/api/emailsubscription`, { email });
         alert('Successfully subscribed!');
         } catch (error) {
         alert('Subscription failed. Please try again.');
@@ -27,7 +27,7 @@ const newsletter = () => {
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
               If something is coming
             </h2>
-            <p className="text-gray-400 md:text-xl">
+            <p className="text-gray-400">
               Subscribe to our newsletter to receive the latest updates, tips, and resources straight to your inbox.
             </p>
             <div className="flex-center space-x-4">

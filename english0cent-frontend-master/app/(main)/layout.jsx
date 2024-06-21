@@ -3,8 +3,8 @@
 import SearchBar from "@/components/header/searchbar";
 import Donate from "@/components/header/donate";
 import Feedback from "@/components/header/feedback";
-import Notification from "@/components/header/notification";
-import Calendar from "@/components/header/calendar";
+import Quote from "@/components/header/quote";
+import Dictionary from "@/components/header/dictionary";
 import Account from "@/components/header/account";
 
 export default function RootLayout({ children }) {
@@ -19,8 +19,8 @@ export default function RootLayout({ children }) {
           <div className="w-1/2 flex justify-end items-center space-x-8">
               <Feedback />
               <Donate />
-              <Notification />
-              <Calendar />
+              <Quote />
+              <Dictionary />
               <Account />
           </div>
         </div>

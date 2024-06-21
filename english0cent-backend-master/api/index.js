@@ -3,5 +3,5 @@ const Feedback = require('./feedback');
 
 module.exports = {
     EmailSubscription,
-    Feedback
+    Feedback,
 };

@@ -1,0 +1,27 @@
+{
+  "kind": "collectionType",
+  "collectionName": "final_tests",
+  "info": {
+    "singularName": "final-test",
+    "pluralName": "final-tests",
+    "displayName": "Final Test"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "Title": {
+      "type": "string",
+      "required": true
+    },
+    "slug": {
+      "type": "string",
+      "required": true
+    },
+    "Question": {
+      "type": "json",
+      "required": true
+    }
+  }
+}

@@ -17,10 +17,14 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
 
+import config from "@/config";
+
 const Page = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [successMessage, setSuccessMessage] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -35,7 +39,7 @@ const Page = () => {
 
     // If passwords match, proceed with sign-up logic
     try {
-      const response = await fetch("http://localhost:5000/auth/signup", {
+      const response = await fetch(`${config.server}/signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -47,14 +51,19 @@ const Page = () => {
       });
 
       if (response.ok) {
-        setSuccessMessage(true);
+        const data = await response.json();
+        if (data.status === "SUCCESS" && data.message === "User created successfully. Check your email for verification!") {
+          setSuccessMessage(true);
+        } else {
+          setErrorMessage(data.message);
+        }
       } else {
         const data = await response.json();
-        alert(data.message);
+        setErrorMessage(data.message);
       }
     } catch (error) {
       console.error("Error signing up:", error);
-      alert("An error occurred. Please try again.");
+      setErrorMessage("An error occurred. Please try again.");
     }
   };
 
@@ -91,12 +100,13 @@ const Page = () => {
                 </CardHeader>
                 <CardContent className="flex flex-col items-center justify-center gap-6 py-8">
                   <CircleCheckIcon className="h-16 w-16 text-green-500" />
-                  <div className="text-center">
+                  <div className="text-center space-y-4">
                     <p className="text-lg font-medium">Thank you for signing up!</p>
                     <p className="text-gray-500 dark:text-gray-400">
                       We've sent a verification link to your email. Please check your inbox and follow the instructions to
                       activate your account.
                     </p>
+                    <div className="mt-4"><Link href={"/auth/signin"} className="text-gray-500 underline">Back to Sign in</Link></div>
                   </div>
                 </CardContent>
               </Card>
@@ -109,36 +119,78 @@ const Page = () => {
                   </p>
                 </div>
                 <div className="space-y-4">
-                  <div>
-                    <Label htmlFor="email">Email</Label>
-                    <Input
-                      id="email"
-                      placeholder="m@example.com"
-                      required
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                    />
-                  </div>
+                <div>
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                    id="email"
+                    placeholder="m@example.com"
+                    required
+                    type="email"
+                    pattern="[^@]+@[^@]+\.[a-zA-Z]{2,}"
+                    title="Email must be a valid format, e.g. john@example.com"
+                    value={email}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      const emailInput = e.target;
+                      if (!emailInput.validity.valid) {
+                        setErrorMessage("");
+                      } else {
+                        setTimeout(() => {
+                          if (!emailInput.validity.valid) {
+                            setErrorMessage("Invalid email format");
+                          } else {
+                            setErrorMessage("");
+                          }
+                        }, 500);
+                      }
+                    }}
+                    onBlur={(e) => {
+                      const emailInput = e.target;
+                      if (!emailInput.validity.valid) {
+                        setErrorMessage("Invalid email format");
+                      } else {
+                        setErrorMessage("");
+                      }
+                    }}
+                  />
+                </div>
                   <div>
                     <Label htmlFor="password">Password</Label>
-                    <Input
-                      id="password"
-                      required
-                      type="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                    />
+                    <div className="flex items-center">
+                      <Input
+                        id="password"
+                        required
+                        type={showPassword ? "text" : "password"}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                      />
+                      <button
+                        type="button"
+                        className="ml-2 p-1 rounded-full hover:bg-gray-200"
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
+                        {showPassword ? "Hide" : "Show"}
+                      </button>
+                    </div>
                   </div>
                   <div>
                     <Label htmlFor="confirm-password">Confirm Password</Label>
-                    <Input
-                      id="confirm-password"
-                      required
-                      type="password"
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                    />
+                    <div className="flex items-center">
+                      <Input
+                        id="confirm-password"
+                        required
+                        type={showConfirmPassword ? "text" : "password"}
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                      />
+                      <button
+                        type="button"
+                        className="ml-2 p-1 rounded-full hover:bg-gray-200"
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      >
+                        {showConfirmPassword ? "Hide" : "Show"}
+                      </button>
+                    </div>
                   </div>
                   {errorMessage && (
                     <p className="text-red-500">{errorMessage}</p>

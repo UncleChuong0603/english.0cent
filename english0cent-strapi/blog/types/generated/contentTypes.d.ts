@@ -805,9 +805,7 @@ export interface ApiBlogBlog extends Schema.CollectionType {
       Attribute.SetMinMaxLength<{
         maxLength: 255;
       }>;
-    Category: Attribute.Enumeration<
-      ['TOEIC', 'IELTS', 'Grammar', 'Vocabulary', 'Study Tips']
-    > &
+    Category: Attribute.Enumeration<['Quick Links', 'Guide']> &
       Attribute.Required;
     Summary: Attribute.String &
       Attribute.Required &
@@ -849,10 +847,25 @@ export interface ApiCourseCourse extends Schema.CollectionType {
     slug: Attribute.String & Attribute.Required;
     Combo: Attribute.JSON & Attribute.Required;
     Summary: Attribute.String & Attribute.Required;
-    Level: Attribute.Enumeration<['Beginner', 'Intermediate', 'Advanced']> &
+    Level: Attribute.Enumeration<['Easy', 'Medium', 'Hard', 'Super Hard']> &
       Attribute.Required;
     Target: Attribute.Enumeration<['Grammar', 'Vocabulary', 'TOEIC', 'IELTS']> &
       Attribute.Required;
+    Modules: Attribute.Relation<
+      'api::course.course',
+      'oneToMany',
+      'api::module.module'
+    >;
+    Documents: Attribute.Relation<
+      'api::course.course',
+      'oneToMany',
+      'api::document.document'
+    >;
+    Final_Test: Attribute.Relation<
+      'api::course.course',
+      'oneToOne',
+      'api::final-test.final-test'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -921,6 +934,179 @@ export interface ApiDocumentDocument extends Schema.CollectionType {
   };
 }
 
+export interface ApiExerciseExercise extends Schema.CollectionType {
+  collectionName: 'exercises';
+  info: {
+    singularName: 'exercise';
+    pluralName: 'exercises';
+    displayName: 'Exercise';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    Title: Attribute.String & Attribute.Required;
+    slug: Attribute.String & Attribute.Required;
+    Question: Attribute.JSON & Attribute.Required;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::exercise.exercise',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::exercise.exercise',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiFinalTestFinalTest extends Schema.CollectionType {
+  collectionName: 'final_tests';
+  info: {
+    singularName: 'final-test';
+    pluralName: 'final-tests';
+    displayName: 'Final Test';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    Title: Attribute.String & Attribute.Required;
+    slug: Attribute.String & Attribute.Required;
+    Question: Attribute.JSON & Attribute.Required;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::final-test.final-test',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::final-test.final-test',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiFooterFooter extends Schema.CollectionType {
+  collectionName: 'footers';
+  info: {
+    singularName: 'footer';
+    pluralName: 'footers';
+    displayName: 'Footer';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    Title: Attribute.String & Attribute.Required;
+    slug: Attribute.String & Attribute.Required;
+    Summary: Attribute.String & Attribute.Required;
+    Content: Attribute.Blocks & Attribute.Required;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::footer.footer',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::footer.footer',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiLessonLesson extends Schema.CollectionType {
+  collectionName: 'lessons';
+  info: {
+    singularName: 'lesson';
+    pluralName: 'lessons';
+    displayName: 'Lesson';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    Title: Attribute.String & Attribute.Required;
+    slug: Attribute.String & Attribute.Required;
+    Content: Attribute.Blocks & Attribute.Required;
+    Exercise: Attribute.Relation<
+      'api::lesson.lesson',
+      'oneToOne',
+      'api::exercise.exercise'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::lesson.lesson',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::lesson.lesson',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiModuleModule extends Schema.CollectionType {
+  collectionName: 'modules';
+  info: {
+    singularName: 'module';
+    pluralName: 'modules';
+    displayName: 'Module';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    Title: Attribute.String & Attribute.Required;
+    slug: Attribute.String & Attribute.Required;
+    Summary: Attribute.String & Attribute.Required;
+    Lessons: Attribute.Relation<
+      'api::module.module',
+      'oneToMany',
+      'api::lesson.lesson'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::module.module',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::module.module',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 declare module '@strapi/types' {
   export module Shared {
     export interface ContentTypes {
@@ -942,6 +1128,11 @@ declare module '@strapi/types' {
       'api::blog.blog': ApiBlogBlog;
       'api::course.course': ApiCourseCourse;
       'api::document.document': ApiDocumentDocument;
+      'api::exercise.exercise': ApiExerciseExercise;
+      'api::final-test.final-test': ApiFinalTestFinalTest;
+      'api::footer.footer': ApiFooterFooter;
+      'api::lesson.lesson': ApiLessonLesson;
+      'api::module.module': ApiModuleModule;
     }
   }
 }

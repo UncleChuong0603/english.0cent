@@ -5,6 +5,7 @@ const authenticateToken = require('../../middlewares/authJwt'); // Ensure this p
 
 router.post('/upgrade', authenticateToken, UserController.upgradePlan);
 router.get('/profile', authenticateToken, UserController.getProfile);
-router.put('/profile', authenticateToken, UserController.updateProfile);
+router.put('/update-profile', authenticateToken, UserController.updateProfile);
+router.put('/update-avatar', authenticateToken, UserController.updateAvatar);
 
 module.exports = router;

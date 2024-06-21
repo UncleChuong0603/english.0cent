@@ -1,4 +1,4 @@
-const User = require('../../models/User');
+const { User } = require('../../models/User');
 
 // Get user profile
 exports.getProfile = async (req, res) => {
@@ -6,9 +6,15 @@ exports.getProfile = async (req, res) => {
     try {
         const user = await User.findById(userId).select('-password');
         if (!user) {
-            return res.status(404).json({
+            return res.status(401).json({
                 status: "FAILED",
-                message: "User not found!"
+                message: "Unauthorized!"
+            });
+        }
+        if (user._id.toString() !== userId) {
+            return res.status(401).json({
+                status: "FAILED",
+                message: "Unauthorized!"
             });
         }
         res.json({
@@ -27,15 +33,28 @@ exports.getProfile = async (req, res) => {
 // Update user profile
 exports.updateProfile = async (req, res) => {
     const userId = req.user.id;
-    const updates = req.body;
+    const { avatar, fullName, phoneNumber, target, timeSpending, introduction, dateOfBirth } = req.body;
+
     try {
-        const user = await User.findByIdAndUpdate(userId, updates, { new: true }).select('-password');
+        const updatedData = {
+            avatar, 
+            fullName,
+            phoneNumber,
+            target,
+            timeSpending,
+            introduction,
+            dateOfBirth,
+        };
+
+        // Update the user's profile
+        const user = await User.findByIdAndUpdate(userId, updatedData, { new: true }).select('-password');
         if (!user) {
             return res.status(404).json({
                 status: "FAILED",
                 message: "User not found!"
             });
         }
+
         res.json({
             status: "SUCCESS",
             message: "Profile updated successfully!",
@@ -49,56 +68,6 @@ exports.updateProfile = async (req, res) => {
         });
     }
 };
-
-// Deactivate user account
-exports.deactivateAccount = async (req, res) => {
-    const userId = req.user.id;
-    try {
-        const user = await User.findByIdAndUpdate(userId, { active: false }, { new: true });
-        if (!user) {
-            return res.status(404).json({
-                status: "FAILED",
-                message: "User not found!"
-            });
-        }
-        res.json({
-            status: "SUCCESS",
-            message: "Account deactivated successfully!",
-            user
-        });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({
-            status: "FAILED",
-            message: "An error occurred while deactivating the account!"
-        });
-    }
-};
-
-// Delete user account
-exports.deleteAccount = async (req, res) => {
-    const userId = req.user.id;
-    try {
-        const user = await User.findByIdAndDelete(userId);
-        if (!user) {
-            return res.status(404).json({
-                status: "FAILED",
-                message: "User not found!"
-            });
-        }
-        res.json({
-            status: "SUCCESS",
-            message: "Account deleted successfully!"
-        });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({
-            status: "FAILED",
-            message: "An error occurred while deleting the account!"
-        });
-    }
-};
-
 // Upgrade user plan
 exports.upgradePlan = async (req, res) => {
     const userId = req.user.id;
@@ -135,3 +104,30 @@ exports.upgradePlan = async (req, res) => {
         });
     }
 };
+
+exports.updateAvatar = async (req, res) => {
+    const userId = req.user.id;
+    const { avatar } = req.body;
+    try {
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({
+                status: "FAILED",
+                message: "User not found!"
+            });
+        }
+        user.avatar = avatar;
+        await user.save();
+        res.json({
+            status: "SUCCESS",
+            message: "Avatar updated successfully!",
+            user
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({
+            status: "FAILED",
+            message: "An error occurred while updating the avatar!"
+        });
+    }
+}

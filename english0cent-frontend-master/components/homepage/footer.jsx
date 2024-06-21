@@ -3,15 +3,15 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 
 const socialLinks = [
-    { href: "#", Icon: FacebookIcon },
-    { href: "#", Icon: InstagramIcon }
+    { href: "https://www.facebook.com/tienganh.0dong.free", Icon: FacebookIcon },
+    { href: "https://www.instagram.com/tienganh0dong/", Icon: InstagramIcon }
   ];
   
 const quickLinks = [
-    { href: "#", label: "About Us" },
-    { href: "#", label: "Contact" },
-    { href: "#", label: "Terms and Conditions" },
-    { href: "#", label: "Privacy Policy" }
+    { href: "/about-us", label: "About Us" },
+    { href: "/contact", label: "Contact" },
+    { href: "/terms-and-conditions", label: "Terms and Conditions" },
+    { href: "/privacy-policy", label: "Privacy Policy" }
     ];
 
 const footer = () => {
@@ -23,7 +23,7 @@ const footer = () => {
             <p className="text-gray-400 mb-4">Learn English for work, for free</p>
             <div className="flex space-x-4">
               {socialLinks.map(({ href, Icon }, index) => (
-                <Link key={index} className="text-gray-400 hover:text-white" href={href}>
+                <Link key={index} className="text-gray-400 hover:text-white" href={href} target="_blank">
                   <Icon className="h-6 w-6" />
                 </Link>
               ))}
@@ -42,10 +42,10 @@ const footer = () => {
             </ul>
           </div>
           <div className="flex flex-col items-center md:items-start">
-            <h4 className="text-lg font-bold mb-4">Join Our Community</h4>
-            <p className="text-gray-400 mb-4">Sign up or enroll in our courses to start learning English for free.</p>
+            <h4 className="text-lg font-bold mb-4">AI English Tutor</h4>
+            <p className="text-gray-400 mb-4">Time to learn with our free AI English Tutor</p>
             <Button className="w-full md:w-auto" variant="outline">
-              Get Started
+              Try Now
             </Button>
           </div>
         </div>

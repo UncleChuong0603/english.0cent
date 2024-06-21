@@ -1,39 +1,54 @@
-import React from 'react';
+import { useEffect, useState } from "react";
+import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { DropdownMenuTrigger, DropdownMenuSeparator, DropdownMenuItem, DropdownMenuContent, DropdownMenu } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 
-// Signout function
-const handleSignout = () => {
-  const token = localStorage.getItem("token");
-
-  // If token is not available, redirect the user to sign-in page
-  if (!token) {
-    window.location.href = "/auth/signin";
-    return;
-  }
-
-  localStorage.removeItem("token"); // Remove the token from storage
-
-  // Optionally, you can make a request to the server to invalidate the token
-  fetch("http://localhost:5000/auth/signout", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      console.log(data.message);
-      // Redirect the user to the sign-in page
-      window.location.href = "/";
-    })
-    .catch((err) => console.error(err));
-};
+import config from "@/config";
 
 const Account = () => {
-  const token = localStorage.getItem("token");
+  const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch(`${config.server}/user/profile`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        const data = await response.json();
+        if (data.status === "SUCCESS") {
+          setUser(data.user);
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+    fetchUserData();
+  }, []);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedToken = localStorage.getItem("token");
+      if (storedToken) {
+        const expirationTime = JSON.parse(atob(storedToken.split('.')[1])).exp * 1000;
+        if (expirationTime < new Date().getTime()) {
+          setToken(null);
+        } else {
+          setToken(storedToken);
+        }
+      }
+      setLoading(false);
+    }
+  }, []);
+
+  // Show loading indicator or nothing while checking the token
+  if (loading) {
+    return null;
+  }
 
   // If no token is found, render the Sign In button
   if (!token) {
@@ -46,22 +61,16 @@ const Account = () => {
 
   // If a token is found, render the account dropdown menu
   return (
-    <div className='cursor-pointer'>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
+    <>
+      <div className='relative cursor-pointer'>
+        <Link href="/profile">
           <Avatar className="w-12 h-12">
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>CN</AvatarFallback>
+            <AvatarImage src={user?.avatar} />
+            <AvatarFallback>{user?.fullName[0]}</AvatarFallback>
           </Avatar>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="mt-4">
-          <DropdownMenuItem>Profile</DropdownMenuItem>
-          <DropdownMenuItem>Settings</DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={handleSignout}>Sign out</DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </div>
+        </Link>
+      </div>
+    </>
   );
 };
 

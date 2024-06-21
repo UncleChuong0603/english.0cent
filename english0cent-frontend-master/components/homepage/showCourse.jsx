@@ -1,33 +1,8 @@
 import Link from "next/link"
+import { Badge } from "@/components/ui/badge"
 
-const courses = [
-    {
-      title: "English for Beginners",
-      description: "Learn the fundamentals of English grammar, vocabulary, and conversation.",
-      imgSrc: "/assets/placeholder.svg",
-      href: "#"
-    },
-    {
-      title: "English for Beginners",
-      description: "Learn the fundamentals of English grammar, vocabulary, and conversation.",
-      imgSrc: "/assets/placeholder.svg",
-      href: "#"
-    },
-    {
-      title: "English for Beginners",
-      description: "Learn the fundamentals of English grammar, vocabulary, and conversation.",
-      imgSrc: "/assets/placeholder.svg",
-      href: "#"
-    },
-    {
-      title: "English for Beginners",
-      description: "Learn the fundamentals of English grammar, vocabulary, and conversation.",
-      imgSrc: "/assets/placeholder.svg",
-      href: "#"
-    },
-  ];
-
-const showCourse = () => {
+const showCourse = ({ courses }) => {
+  const limitedCourses = courses?.slice(0, 4)
   return (
     <div className="w-full py-10 bg-white rounded-3xl">
         <div className="container px-4 md:px-6">
@@ -37,31 +12,40 @@ const showCourse = () => {
               Explore our top-rated courses and take your skills to the next level.
             </p>
           </div>
-          <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-            {courses.map((course, index) => (
-              <div key={index} className="group rounded-lg border transition-all hover:shadow-lg dark:border-gray-800">
-                <div className="flex-center p-5">
-                  <img
-                    alt="Course Image"
-                    className="h-[100px] w-[100px] rounded-t-lg object-cover object-center transition-all group-hover:scale-105"
-                    height="100"
-                    src={course.imgSrc}
-                    width="100"
-                  />
-                </div>
-                <div className="p-4">
-                  <h3 className="text-lg font-semibold transition-colors group-hover:text-gray-900 dark:group-hover:text-gray-50">
-                    {course.title}
-                  </h3>
-                  <p className="mt-2 text-sm text-gray-500 line-clamp-2 dark:text-gray-400">
-                    {course.description}
-                  </p>
-                  <Link
-                    className="mt-4 inline-flex h-9 flex-center rounded-md bg-gray-900 px-4 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus-visible:ring-gray-300"
-                    href={course.href}
-                  >
-                    Learn More
+          <div className="mt-10 grid grid-cols-2 grid-rows-2 gap-4">
+            {limitedCourses.slice(0, 2).map((course, index) => (
+              <div key={index} className="group bg-black text-white rounded-lg border transition-all hover:shadow-lg dark:border-gray-800">
+                <div className="p-4 flex-col space-y-4 ">
+                  <Link href={`/course/${course.attributes.slug}`}>
+                    <h3 className="text-lg font-semibold transition-colors">
+                      {course.attributes.Title}
+                    </h3>
                   </Link>
+                  <p className="mt-2 text-sm text-white line-clamp-2 dark:text-gray-400">
+                    {course.attributes.Summary}
+                  </p>
+                  <div className="space-x-4">
+                    <Badge variant={"secondary"}>{course.attributes.Target}</Badge>
+                    <Badge variant={"secondary"}>{course.attributes.Level}</Badge>
+                    <Badge variant={"secondary"}>{course.attributes.Combo.combo.length} Combo</Badge>
+                  </div>
+                </div>
+              </div>
+            ))}
+            {limitedCourses?.slice(2).map((course, index) => (
+              <div key={index+1} className="group rounded-lg border transition-all hover:shadow-lg dark:border-gray-800">
+                <div className="p-4 flex-col space-y-4 ">
+                  <h3 className="text-lg font-semibold transition-colors group-hover:text-gray-900 dark:group-hover:text-gray-50">
+                    {course.attributes.Title}
+                  </h3>
+                  <p className="mt-2 text-sm line-clamp-2 dark:text-gray-400">
+                    {course.attributes.Summary}
+                  </p>
+                  <div className="space-x-4">
+                    <Badge variant={"secondary"}>{course.attributes.Target}</Badge>
+                    <Badge variant={"secondary"}>{course.attributes.Level}</Badge>
+                    <Badge variant={"secondary"}>{course.attributes.Combo.combo.length} Combo</Badge>
+                  </div>
                 </div>
               </div>
             ))}

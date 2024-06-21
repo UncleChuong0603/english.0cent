@@ -190,7 +190,7 @@ exports.signin = async (req, res) => {
     if (!email || !password) {
         return res.json({
             status: "FAILED",
-            message: "Empty credentials supplied!"
+            message: "Make sure to enter an email and password!"
         });
     }
 
@@ -199,7 +199,7 @@ exports.signin = async (req, res) => {
         if (!user) {
             return res.json({
                 status: "FAILED",
-                message: "Invalid credentials!"
+                message: "User with provided email does not exist!"
             });
         }
 
@@ -221,7 +221,7 @@ exports.signin = async (req, res) => {
         } else {
             res.json({
                 status: "FAILED",
-                message: "Invalid credentials!"
+                message: "Password is incorrect!"
             });
         }
 
@@ -241,4 +241,117 @@ exports.signout = (req, res) => {
         message: "User signed out successfully!"
     });
 };
+
+exports.resetPassword = async (req, res) => {
+    const { email } = req.body;
+
+    if (!email) {
+        return res.json({
+            status: "FAILED",
+            message: "Missing input field: email!"
+        });
+    }
+
+    try {
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.json({
+                status: "FAILED",
+                message: "User with provided email does not exist!"
+            });
+        }
+
+        const newPassword = generatePassword();
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        await User.updateOne({ _id: user._id }, { password: hashedPassword });
+
+        const mailOptions = {
+            from: process.env.AUTH_EMAIL,
+            to: email,
+            subject: "Password reset successful",
+            html: `<p>Your new password: ${newPassword}</p>`
+        };
+
+        transporter.sendMail(mailOptions, (err, info) => {
+            if (err) {
+                console.log("Error sending email:", err);
+            } else {
+                console.log("Email sent: " + info.response);
+            }
+        });
+
+        res.json({
+            status: "SUCCESS",
+            message: "Password reset successful! Check your inbox for new password."
+        });
+    } catch (err) {
+        console.log(err);
+        res.json({
+            status: "FAILED",
+            message: "An error occurred while resetting the password!"
+        });
+    }
+};
+
+
+exports.changePassword = async (req, res) => {
+    const { email, password, newPassword, confirmNewPassword } = req.body;
+
+    if (!email || !password || !newPassword || !confirmNewPassword) {
+        return res.json({
+            status: "FAILED",
+            message: "Missing input fields!"
+        });
+    }
+
+    if (newPassword !== confirmNewPassword) {
+        return res.json({
+            status: "FAILED",
+            message: "New password and confirm new password do not match!"
+        });
+    }
+
+    try {
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.json({
+                status: "FAILED",
+                message: "User with provided email does not exist!"
+            });
+        }
+
+        const match = await bcrypt.compare(password, user.password);
+        if (!match) {
+            return res.json({
+                status: "FAILED",
+                message: "Incorrect password!"
+            });
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        await User.updateOne({ _id: user._id }, { password: hashedPassword });
+
+        res.json({
+            status: "SUCCESS",
+            message: "Password changed successfully!"
+        });
+    } catch (err) {
+        console.log(err);
+        res.json({
+            status: "FAILED",
+            message: "An error occurred while changing the password!"
+        });
+    }
+};
+
+
+
+function generatePassword() {
+    const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let password = '';
+    for (let i = 0; i < 10; i++) {
+        password += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return password;
+}
 

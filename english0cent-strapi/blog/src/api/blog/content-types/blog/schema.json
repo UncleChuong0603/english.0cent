@@ -20,11 +20,8 @@
     "Category": {
       "type": "enumeration",
       "enum": [
-        "TOEIC",
-        "IELTS",
-        "Grammar",
-        "Vocabulary",
-        "Study Tips"
+        "Quick Links",
+        "Guide"
       ],
       "required": true
     },

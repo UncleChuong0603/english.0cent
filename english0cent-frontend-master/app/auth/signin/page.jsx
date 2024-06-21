@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {
   Carousel,
@@ -7,7 +7,6 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -16,45 +15,48 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import Image from "next/image";
 
-const page = () => {
-  
+import config from "@/config";
+
+const Page = () => {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
   const handleSignIn = async () => {
     try {
-        const response = await fetch('http://localhost:5000/auth/signin', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email,
-                password,
-            }),
-        });
+      const response = await fetch(`${config.server}/auth/signin`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-        if (response.ok) {
-            const data = await response.json();
-            const token = data.token;
+      if (response.ok) {
+        const data = await response.json();
+        const { status, message, token } = data;
 
-            // Store the token in local storage or cookies
-            localStorage.setItem('token', token);
+        if (status === "SUCCESS" && message === "User signed in successfully!") {
+          // Store the token in local storage or cookies
+          localStorage.setItem("token", token);
 
-            // Redirect to the dashboard
-            router.push('/dashboard');
+          // Redirect to the dashboard
+          router.push("/dashboard");
         } else {
-            const data = await response.json();
-            setErrorMessage(data.message);
+          setErrorMessage(message);
         }
+      } else {
+        const data = await response.json();
+        setErrorMessage(data.message);
+      }
     } catch (error) {
-        console.error('Error signing in:', error);
-        setErrorMessage('An error occurred. Please try again.');
+      console.error("Error signing in:", error);
+      setErrorMessage("An error occurred. Please try again.");
     }
-};
-  
+  };
+
   return (
     <section className="w-full h-full flex space-x-5">
       <div className="w-1/2 h-full bg-white rounded-3xl flex-center p-20">
@@ -63,12 +65,7 @@ const page = () => {
             {sliderItem.map((item, index) => (
               <CarouselItem key={index}>
                 <div className="w-full h-auto flex-center rounded-3xl">
-                  <Image
-                    src={item.src}
-                    width={400}
-                    height={400}
-                    alt={item.alt}
-                  />
+                  <Image src={item.src} width={400} height={400} alt={item.alt} />
                 </div>
               </CarouselItem>
             ))}
@@ -95,19 +92,60 @@ const page = () => {
                     placeholder="m@example.com"
                     required
                     type="email"
+                    pattern="[^@]+@[^@]+\.[a-zA-Z]{2,}"
+                    title="Email must be a valid format, e.g. john@example.com"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      const emailInput = e.target;
+                      if (!emailInput.validity.valid) {
+                        setErrorMessage("");
+                      } else {
+                        setTimeout(() => {
+                          if (!emailInput.validity.valid) {
+                            setErrorMessage("Invalid email format");
+                          } else {
+                            setErrorMessage("");
+                          }
+                        }, 500);
+                      }
+                    }}
+                    onBlur={(e) => {
+                      const emailInput = e.target;
+                      if (!emailInput.validity.valid) {
+                        setErrorMessage("Invalid email format");
+                      } else {
+                        setErrorMessage("");
+                      }
+                    }}
                   />
                 </div>
                 <div>
                   <Label htmlFor="password">Password</Label>
-                  <Input
-                    id="password"
-                    required
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
+                  <div className="flex items-center">
+                    <Input
+                      id="password"
+                      required
+                      type={showPassword ? "text" : "password"}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <button
+                      type="button"
+                      className="ml-2 p-1 rounded-full hover:bg-gray-200"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? "Hide" : "Show"}
+                    </button>
+                  </div>
+                </div>
+                {errorMessage && (
+                  <p className="text-red-500 text-sm">{errorMessage}</p>
+                )}
+                <div className="text-sm text-gray-500 dark:text-gray-400">
+                  <Link className="font-medium underline" href="/auth/reset-password">
+                    Reset Password
+                  </Link>
                 </div>
               </div>
               <div className="flex flex-col gap-4">
@@ -115,7 +153,6 @@ const page = () => {
                   Sign in
                 </Button>
                 <Button className="w-full" variant="outline">
-                  <ChromeIcon className="mr-2 h-4 w-4" />
                   Sign in with Google
                 </Button>
               </div>
@@ -125,9 +162,6 @@ const page = () => {
                   Sign up
                 </Link>
               </div>
-              {errorMessage && (
-                <p className="text-red-500 text-sm">{errorMessage}</p>
-              )}
             </div>
           </div>
         </div>
@@ -136,33 +170,12 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
 
 const sliderItem = [
   { href: "#", src: "/assets/images/AboutMe.png", alt: "Test", label: "Test" },
   { href: "#", src: "/assets/images/Analytics.png", alt: "Test", label: "Test" },
-  { href: "#", src: "/assets/images/Blogs.png", alt: "Test", label: "Test" }
+  { href: "#", src: "/assets/images/Blogs.png", alt: "Test", label: "Test" },
 ];
 
-function ChromeIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="12" cy="12" r="10" />
-      <circle cx="12" cy="12" r="4" />
-      <line x1="21.17" x2="12" y1="8" y2="8" />
-      <line x1="3.95" x2="8.54" y1="6.06" y2="14" />
-      <line x1="10.88" x2="15.46" y1="21.94" y2="14" />
-    </svg>
-  );
-}
+
